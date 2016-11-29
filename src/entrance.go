@@ -50,7 +50,8 @@ func uploadHanlder(w http.ResponseWriter, r *http.Request) {
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	imgId := r.FormValue("id")
 	imgPath := UPLOAD_DIR + "/" + imgId
-	if exist := isExist(imgPath); exist {
+	log.Println("Image id:", imgId)
+	if exist := isExist(imgPath); !exist {
 		http.NotFound(w, r)
 		return
 	}
@@ -101,6 +102,7 @@ func init() {
 		log.Println("Template path is ", templatePath)
 		t := template.Must(template.ParseFiles(templatePath))
 		templates[templateName] = t
+		log.Println("Template  is ", t)
 	}
 }
 
@@ -124,7 +126,8 @@ func isExist(path string) bool {
 }
 
 func renderHtml(w http.ResponseWriter, tmpPath string, locals map[string]interface{}) (err error) {
-	err = templates[tmpPath].Execute(w, locals)
+	log.Println("Template is ", templates[tmpPath + ".html"])
+	err = templates[tmpPath + ".html"].Execute(w, locals)
 	return
 }
 
